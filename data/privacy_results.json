@@ -1,0 +1,25 @@
+{
+  "model_inversion": {
+    "description": "Gradient ascent attack on random noise to reconstruct training images",
+    "target_classes": [
+      "Adialer.C",
+      "Dinwod",
+      "Lolyda.AA1",
+      "Remcos"
+    ],
+    "result": "Reconstructed images are unrecognizable noise \u2014 raw data not recoverable",
+    "mse_scores": {
+      "Adialer.C": 0.10245854407548904,
+      "Dinwod": 0.09102919697761536,
+      "Lolyda.AA1": 0.16488116979599,
+      "Remcos": 0.1476675271987915
+    }
+  },
+  "membership_inference": {
+    "description": "Threshold-based attack to identify training set members",
+    "attack_accuracy": 50.2,
+    "random_baseline": 50.0,
+    "gap_from_random": 0.2,
+    "privacy_holds": true
+  }
+}

@@ -1,0 +1,9 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.DS_Store
+data/X_train*.npy
+data/X_client*.npy
+data/y_train*.npy
+data/y_client*.npy

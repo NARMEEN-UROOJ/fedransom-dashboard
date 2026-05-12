@@ -1,0 +1,375 @@
+{
+  "Adialer.C": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 56.0
+  },
+  "Adposhel": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 74.0
+  },
+  "Agent.FYI": {
+    "precision": 0.9818181818181818,
+    "recall": 1.0,
+    "f1-score": 0.9908256880733946,
+    "support": 54.0
+  },
+  "Allaple.A": {
+    "precision": 1.0,
+    "recall": 0.9985052316890882,
+    "f1-score": 0.9992520568436799,
+    "support": 669.0
+  },
+  "Allaple.L": {
+    "precision": 0.9917808219178083,
+    "recall": 1.0,
+    "f1-score": 0.9958734525447043,
+    "support": 362.0
+  },
+  "Alueron.gen!J": {
+    "precision": 0.9594594594594594,
+    "recall": 1.0,
+    "f1-score": 0.9793103448275862,
+    "support": 71.0
+  },
+  "Amonetize": {
+    "precision": 1.0,
+    "recall": 0.9459459459459459,
+    "f1-score": 0.9722222222222222,
+    "support": 74.0
+  },
+  "Androm": {
+    "precision": 0.9714285714285714,
+    "recall": 0.9066666666666666,
+    "f1-score": 0.9379310344827586,
+    "support": 75.0
+  },
+  "Autorun.K": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 49.0
+  },
+  "BrowseFox": {
+    "precision": 0.9733333333333334,
+    "recall": 0.9864864864864865,
+    "f1-score": 0.9798657718120806,
+    "support": 74.0
+  },
+  "C2LOP.P": {
+    "precision": 0.975609756097561,
+    "recall": 0.7547169811320755,
+    "f1-score": 0.851063829787234,
+    "support": 53.0
+  },
+  "C2LOP.gen!g": {
+    "precision": 0.8571428571428571,
+    "recall": 0.9166666666666666,
+    "f1-score": 0.8859060402684564,
+    "support": 72.0
+  },
+  "CoinMinerXMRig": {
+    "precision": 0.6666666666666666,
+    "recall": 0.43478260869565216,
+    "f1-score": 0.5263157894736842,
+    "support": 23.0
+  },
+  "Danabot": {
+    "precision": 0.7611940298507462,
+    "recall": 0.68,
+    "f1-score": 0.7183098591549296,
+    "support": 75.0
+  },
+  "Dialplatform.B": {
+    "precision": 1.0,
+    "recall": 0.984375,
+    "f1-score": 0.9921259842519685,
+    "support": 64.0
+  },
+  "Dinwod": {
+    "precision": 0.9868421052631579,
+    "recall": 1.0,
+    "f1-score": 0.9933774834437086,
+    "support": 75.0
+  },
+  "Dontovo.A": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 34.0
+  },
+  "Dridex": {
+    "precision": 0.9594594594594594,
+    "recall": 0.9466666666666667,
+    "f1-score": 0.9530201342281879,
+    "support": 75.0
+  },
+  "Elex": {
+    "precision": 1.0,
+    "recall": 0.9866666666666667,
+    "f1-score": 0.9932885906040269,
+    "support": 75.0
+  },
+  "Expiro": {
+    "precision": 0.9436619718309859,
+    "recall": 0.8933333333333333,
+    "f1-score": 0.9178082191780822,
+    "support": 75.0
+  },
+  "Fakerean": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 69.0
+  },
+  "Fasong": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 75.0
+  },
+  "Gh0stRAT": {
+    "precision": 0.7894736842105263,
+    "recall": 0.4838709677419355,
+    "f1-score": 0.6,
+    "support": 31.0
+  },
+  "Glupteba": {
+    "precision": 0.6521739130434783,
+    "recall": 0.7317073170731707,
+    "f1-score": 0.6896551724137931,
+    "support": 41.0
+  },
+  "Gozi": {
+    "precision": 0.9696969696969697,
+    "recall": 0.8533333333333334,
+    "f1-score": 0.9078014184397163,
+    "support": 75.0
+  },
+  "HackKMS": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 75.0
+  },
+  "Hlux": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 75.0
+  },
+  "Injector": {
+    "precision": 0.9459459459459459,
+    "recall": 0.9333333333333333,
+    "f1-score": 0.9395973154362416,
+    "support": 75.0
+  },
+  "InstallCore": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 75.0
+  },
+  "Instantaccess": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 97.0
+  },
+  "Lolyda.AA1": {
+    "precision": 0.975,
+    "recall": 1.0,
+    "f1-score": 0.9873417721518988,
+    "support": 39.0
+  },
+  "Lolyda.AA2": {
+    "precision": 1.0,
+    "recall": 0.9736842105263158,
+    "f1-score": 0.9866666666666667,
+    "support": 38.0
+  },
+  "Lolyda.AA3": {
+    "precision": 1.0,
+    "recall": 0.9824561403508771,
+    "f1-score": 0.9911504424778761,
+    "support": 57.0
+  },
+  "Lolyda.AT": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 34.0
+  },
+  "Malex.gen!J": {
+    "precision": 0.8846153846153846,
+    "recall": 1.0,
+    "f1-score": 0.9387755102040817,
+    "support": 23.0
+  },
+  "MultiPlug": {
+    "precision": 0.9866666666666667,
+    "recall": 0.9866666666666667,
+    "f1-score": 0.9866666666666667,
+    "support": 75.0
+  },
+  "NanoCore": {
+    "precision": 0.5833333333333334,
+    "recall": 0.56,
+    "f1-score": 0.5714285714285714,
+    "support": 75.0
+  },
+  "Neoreklami": {
+    "precision": 1.0,
+    "recall": 0.9866666666666667,
+    "f1-score": 0.9932885906040269,
+    "support": 75.0
+  },
+  "Neshta": {
+    "precision": 0.9027777777777778,
+    "recall": 0.8783783783783784,
+    "f1-score": 0.8904109589041096,
+    "support": 74.0
+  },
+  "Obfuscator.AD": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 31.0
+  },
+  "Quakbot": {
+    "precision": 0.961038961038961,
+    "recall": 0.9866666666666667,
+    "f1-score": 0.9736842105263158,
+    "support": 75.0
+  },
+  "Rbot!gen": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 33.0
+  },
+  "RecordBreaker": {
+    "precision": 0.2,
+    "recall": 0.18666666666666668,
+    "f1-score": 0.19310344827586207,
+    "support": 75.0
+  },
+  "RedLineStealer": {
+    "precision": 0.19540229885057472,
+    "recall": 0.22666666666666666,
+    "f1-score": 0.20987654320987653,
+    "support": 75.0
+  },
+  "Regrun": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 73.0
+  },
+  "Remcos": {
+    "precision": 0.40336134453781514,
+    "recall": 0.64,
+    "f1-score": 0.4948453608247423,
+    "support": 75.0
+  },
+  "Sality": {
+    "precision": 0.8089887640449438,
+    "recall": 0.96,
+    "f1-score": 0.8780487804878049,
+    "support": 75.0
+  },
+  "Skintrim.N": {
+    "precision": 0.925,
+    "recall": 1.0,
+    "f1-score": 0.961038961038961,
+    "support": 37.0
+  },
+  "Snarasite": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 75.0
+  },
+  "Stantinko": {
+    "precision": 0.9868421052631579,
+    "recall": 1.0,
+    "f1-score": 0.9933774834437086,
+    "support": 75.0
+  },
+  "Swizzor.gen!E": {
+    "precision": 0.9259259259259259,
+    "recall": 0.9259259259259259,
+    "f1-score": 0.9259259259259259,
+    "support": 27.0
+  },
+  "Swizzor.gen!I": {
+    "precision": 0.9523809523809523,
+    "recall": 0.9090909090909091,
+    "f1-score": 0.9302325581395349,
+    "support": 22.0
+  },
+  "Tinba": {
+    "precision": 0.9,
+    "recall": 0.9642857142857143,
+    "f1-score": 0.9310344827586207,
+    "support": 28.0
+  },
+  "Trickbot": {
+    "precision": 0.9848484848484849,
+    "recall": 0.8666666666666667,
+    "f1-score": 0.9219858156028369,
+    "support": 75.0
+  },
+  "VB.AT": {
+    "precision": 0.989247311827957,
+    "recall": 1.0,
+    "f1-score": 0.9945945945945946,
+    "support": 92.0
+  },
+  "VBKrypt": {
+    "precision": 0.96,
+    "recall": 0.972972972972973,
+    "f1-score": 0.9664429530201343,
+    "support": 74.0
+  },
+  "Vilsel": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 75.0
+  },
+  "Wintrim.BX": {
+    "precision": 1.0,
+    "recall": 0.9444444444444444,
+    "f1-score": 0.9714285714285714,
+    "support": 18.0
+  },
+  "Yuner.A": {
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1-score": 1.0,
+    "support": 182.0
+  },
+  "Zeus": {
+    "precision": 0.7692307692307693,
+    "recall": 0.5882352941176471,
+    "f1-score": 0.6666666666666666,
+    "support": 51.0
+  },
+  "accuracy": 0.9231914893617021,
+  "macro avg": {
+    "precision": 0.9113391301251402,
+    "recall": 0.8996088532587367,
+    "f1-score": 0.9030260990422417,
+    "support": 4700.0
+  },
+  "weighted avg": {
+    "precision": 0.9286484716136875,
+    "recall": 0.9231914893617021,
+    "f1-score": 0.9244144518777687,
+    "support": 4700.0
+  }
+}

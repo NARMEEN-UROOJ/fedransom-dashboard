@@ -1,0 +1,4 @@
+Model,Accuracy,F1 Score,ROC-AUC
+Client 1 (Local),0.9265,0.9262,0.9726
+Client 2 (Local),0.7472,0.796,0.9497
+FedAvg Global,0.9314,0.9298,0.9778

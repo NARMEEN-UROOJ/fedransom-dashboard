@@ -1,0 +1,38 @@
+{
+  "image_branch": {
+    "centralized_acc": 89.28,
+    "client3_acc": 83.89,
+    "client4_acc": 88.26,
+    "fedavg_acc": 92.32,
+    "num_classes": 60,
+    "model_name": "MobileNetV2",
+    "dataset": "Malimg + MaleBin",
+    "total_images": 31332,
+    "fl_rounds": 10,
+    "local_epochs": 5
+  },
+  "ember2018_branch": {
+    "centralized_acc": 95.2,
+    "client1_acc": 93.41,
+    "client2_acc": 85.9,
+    "fedavg_acc": 94.71,
+    "features": 2341,
+    "model_name": "MLP",
+    "dataset": "EMBER 2018",
+    "total_samples": 599920,
+    "fl_rounds": 10,
+    "local_epochs": 3
+  },
+  "ember2024_branch": {
+    "centralized_acc": 94.17,
+    "client1_acc": 93.41,
+    "client2_acc": 88.75,
+    "fedavg_acc": 94.53,
+    "features": 890,
+    "model_name": "MLP",
+    "dataset": "EMBER 2024",
+    "total_samples": 720000,
+    "fl_rounds": 10,
+    "local_epochs": 3
+  }
+}
