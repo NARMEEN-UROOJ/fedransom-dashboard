@@ -1,3 +1,15 @@
+
+---
+title: FedRansom Dashboard
+emoji: 🛡️
+colorFrom: blue
+colorTo: cyan
+sdk: streamlit
+sdk_version: 1.35.0
+app_file: app.py
+pinned: true
+---
+
 # FedRansom — Federated Learning Based Privacy-Preserving Ransomware Detection
 
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python)](https://python.org)
