@@ -1,7 +1,7 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import json, pickle, os, warnings
+import json, pickle, os, warnings, re
 warnings.filterwarnings('ignore')
 import matplotlib
 matplotlib.use('Agg')
@@ -25,8 +25,117 @@ DATA   = os.path.join(BASE, 'data')
 MODELS = os.path.join(BASE, 'models')
 ASSETS = os.path.join(BASE, 'assets')
 
-if 'page' not in st.session_state:
-    st.session_state.page = 'hero'
+# ── Session state init ────────────────────────────────
+if 'page'       not in st.session_state: st.session_state.page       = 'hero'
+if 'logged_in'  not in st.session_state: st.session_state.logged_in  = False
+if 'user_email' not in st.session_state: st.session_state.user_email = ''
+
+# ── Email validation ──────────────────────────────────
+def is_valid_email(email):
+    pattern = r'^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$'
+    return bool(re.match(pattern, email.strip()))
+
+# ══════════════════════════════════════════════════════
+# LOGIN PAGE
+# ══════════════════════════════════════════════════════
+if not st.session_state.logged_in:
+    st.markdown("""
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+html,body,[class*="css"]{background:#04060D!important;color:#E2E8F0!important;font-family:'Inter',sans-serif!important;}
+.stApp{
+  background:#04060D!important;
+  background-image:
+    radial-gradient(circle at 20% 20%,rgba(59,130,246,0.06),transparent 40%),
+    radial-gradient(circle at 80% 80%,rgba(6,182,212,0.05),transparent 40%),
+    radial-gradient(rgba(59,130,246,0.035) 1px,transparent 1px)!important;
+  background-size:auto,auto,26px 26px!important;
+}
+.block-container{max-width:440px!important;margin:0 auto!important;padding-top:7vh!important;padding-bottom:4vh!important;}
+.stTextInput>div>div{
+  background:#0A101E!important;border:1px solid rgba(59,130,246,0.2)!important;
+  border-radius:10px!important;transition:all 0.2s ease!important;
+}
+.stTextInput>div>div:focus-within{
+  border-color:rgba(59,130,246,0.6)!important;
+  box-shadow:0 0 0 3px rgba(59,130,246,0.12)!important;
+}
+.stTextInput>div>div>input{color:#E2E8F0!important;font-family:'Inter',sans-serif!important;font-size:14px!important;padding:12px 14px!important;}
+.stTextInput>div>div>input::placeholder{color:#3A4658!important;}
+.stTextInput label{color:#94A3B8!important;font-size:12px!important;font-weight:600!important;text-transform:uppercase!important;letter-spacing:.06em!important;font-family:'Space Grotesk',sans-serif!important;}
+.stButton>button{
+  background:linear-gradient(135deg,#1D4ED8,#3B82F6)!important;color:#fff!important;
+  border:none!important;border-radius:10px!important;font-family:'Space Grotesk',sans-serif!important;
+  font-weight:600!important;font-size:15px!important;padding:13px!important;width:100%!important;
+  box-shadow:0 4px 18px rgba(59,130,246,0.32)!important;transition:all 0.22s ease!important;
+  letter-spacing:.01em!important;margin-top:4px!important;
+}
+.stButton>button:hover{transform:translateY(-2px)!important;box-shadow:0 10px 28px rgba(59,130,246,0.45)!important;}
+.stButton>button:active{transform:translateY(0)!important;}
+.stAlert{border-radius:10px!important;font-family:'Inter',sans-serif!important;}
+footer,#MainMenu,header{display:none!important;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulseGlow{0%,100%{box-shadow:0 0 32px rgba(59,130,246,0.22)}50%{box-shadow:0 0 44px rgba(59,130,246,0.4)}}
+.login-head{animation:fadeUp 0.5s ease both;}
+.login-card{animation:fadeUp 0.5s 0.08s ease both;}
+.login-foot{animation:fadeUp 0.5s 0.16s ease both;}
+.login-logo{animation:pulseGlow 3s ease infinite;}
+</style>""", unsafe_allow_html=True)
+
+    st.markdown("""
+<div class="login-head" style="text-align:center;margin-bottom:24px">
+  <div class="login-logo" style="width:60px;height:60px;border-radius:15px;margin:0 auto 18px;
+       background:linear-gradient(135deg,#1E3A8A,#3B82F6);
+       border:1px solid rgba(59,130,246,0.4);
+       display:flex;align-items:center;justify-content:center">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+         stroke="#BFDBFE" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+    </svg>
+  </div>
+  <h1 style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;
+             color:#F1F5F9;letter-spacing:-0.025em;margin:0 0 8px">FedRansom</h1>
+  <p style="font-size:12px;color:#475569;margin:0 auto;font-weight:500;letter-spacing:.05em;
+            text-transform:uppercase;max-width:320px;line-height:1.6">
+    Federated Learning Based Privacy-Preserving Malware Detection
+  </p>
+</div>
+<div class="login-card" style="background:rgba(10,16,30,0.7);border:1px solid rgba(59,130,246,0.14);
+            border-radius:16px;padding:30px 30px 26px;backdrop-filter:blur(14px);
+            box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+  <div style="text-align:center;margin-bottom:22px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:#E2E8F0;margin-bottom:5px">Welcome</div>
+    <div style="font-size:13px;color:#64748B;line-height:1.5">Enter your email to access the detection dashboard</div>
+  </div>
+""", unsafe_allow_html=True)
+
+    email_val = st.text_input("Email Address", placeholder="you@gmail.com", label_visibility="visible")
+
+    if st.button("Access Dashboard", type="primary"):
+        if email_val.strip() == '':
+            st.error("Please enter your email address.")
+        elif not is_valid_email(email_val):
+            st.error("Please enter a valid email address (e.g. user@gmail.com)")
+        else:
+            st.session_state.logged_in  = True
+            st.session_state.user_email = email_val.strip().lower()
+            st.rerun()
+
+    st.markdown("""
+  <div style="display:flex;align-items:center;gap:8px;margin-top:18px;
+              padding-top:16px;border-top:1px solid rgba(59,130,246,0.08)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    <span style="font-size:11px;color:#475569;line-height:1.4">No password required. No raw data is ever stored.</span>
+  </div>
+</div>
+<div class="login-foot" style="text-align:center;margin-top:22px">
+  <p style="font-size:11px;color:#1E293B;line-height:1.8;margin:0">
+    Final Year Project &nbsp;·&nbsp; [University Name] &nbsp;·&nbsp; 2025<br>
+    GDPR &amp; HIPAA Compliant &nbsp;·&nbsp; Privacy by Design
+  </p>
+</div>""", unsafe_allow_html=True)
+
+    st.stop()
 
 # ══════════════════════════════════════════════════════
 # THEME — Premium Cybersecurity Navy
@@ -466,7 +575,21 @@ with st.sidebar:
     Federated Learning Based<br>Privacy Preserving Ransomware Detection
   </div>
 </div>
-<div style="height:1px;background:linear-gradient(90deg,rgba(59,130,246,0.25),transparent);margin-bottom:12px"></div>
+<div style="height:1px;background:linear-gradient(90deg,rgba(59,130,246,0.25),transparent);margin-bottom:10px"></div>""", unsafe_allow_html=True)
+
+    # Welcome user
+    email_display = st.session_state.user_email
+    short_email = email_display if len(email_display) <= 26 else email_display[:23] + '...'
+    st.markdown(f"""
+<div style="background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.15);
+            border-radius:8px;padding:10px 12px;margin-bottom:10px">
+  <div style="font-size:9px;font-weight:700;color:#334155;text-transform:uppercase;
+              letter-spacing:.08em;font-family:'Space Grotesk',sans-serif;margin-bottom:4px">
+    Logged in as
+  </div>
+  <div style="font-size:11.5px;color:#60A5FA;font-family:'JetBrains Mono',monospace;
+              word-break:break-all;line-height:1.4">{short_email}</div>
+</div>
 <div style="font-size:9px;font-weight:700;color:#1e293b;text-transform:uppercase;letter-spacing:.1em;font-family:'Space Grotesk',sans-serif;margin-bottom:6px;padding:0 2px">Navigation</div>
 """, unsafe_allow_html=True)
 
@@ -521,7 +644,15 @@ section[data-testid="stSidebar"] div[data-testid="stButton"]:nth-child({active_i
   <svg style="width:11px;height:11px;vertical-align:middle;margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>No Raw Data Shared<br>
   <svg style="width:11px;height:11px;vertical-align:middle;margin-right:5px" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Data Sovereignty
 </div>
+<div style="height:1px;background:linear-gradient(90deg,rgba(59,130,246,0.15),transparent);margin:14px 0 10px"></div>
 """, unsafe_allow_html=True)
+
+    # Logout button
+    if st.button("Logout", use_container_width=True, key="logout_btn"):
+        st.session_state.logged_in  = False
+        st.session_state.user_email = ''
+        st.session_state.page       = 'hero'
+        st.rerun()
 
 
 # ══════════════════════════════════════════════════════
@@ -561,38 +692,38 @@ if pg=='hero':
     <radialGradient id="gc" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="{v['ac']}" stop-opacity="0.2"/><stop offset="100%" stop-color="{v['ac']}" stop-opacity="0"/></radialGradient>
     <radialGradient id="go" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="{v['ok']}" stop-opacity="0.2"/><stop offset="100%" stop-color="{v['ok']}" stop-opacity="0"/></radialGradient>
   </defs>
-  <circle cx="400" cy="150" r="50" fill="url(#gc)"/>
-  <line x1="118" y1="83" x2="365" y2="138" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <line x1="118" y1="222" x2="365" y2="162" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <line x1="682" y1="83" x2="435" y2="138" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <line x1="682" y1="222" x2="435" y2="162" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.5s" repeatCount="indefinite" path="M118,83 Q260,95 365,138"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite"/></circle>
-  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.8s" begin="1.2s" repeatCount="indefinite" path="M118,222 Q240,210 365,162"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.2s" repeatCount="indefinite"/></circle>
-  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.5s" begin=".6s" repeatCount="indefinite" path="M682,83 Q540,95 435,138"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" begin=".6s" repeatCount="indefinite"/></circle>
-  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite" path="M682,222 Q560,210 435,162"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.8s" repeatCount="indefinite"/></circle>
-  <circle cx="400" cy="150" r="40" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="2"/>
-  <text x="400" y="144" text-anchor="middle" fill="{v['ac']}" font-size="10" font-weight="700" font-family="Space Grotesk,sans-serif">FEDERATED</text>
-  <text x="400" y="157" text-anchor="middle" fill="{v['ac']}" font-size="10" font-weight="700" font-family="Space Grotesk,sans-serif">SERVER</text>
-  <text x="400" y="170" text-anchor="middle" fill="{v['t3']}" font-size="8.5" font-family="Inter,sans-serif">FedAvg · FedMD</text>
-  <rect x="80" y="60" width="76" height="46" rx="8" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="1.5"/>
-  <text x="118" y="81" text-anchor="middle" fill="{v['ac']}" font-size="9.5" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 3</text>
-  <text x="118" y="95" text-anchor="middle" fill="{v['t2']}" font-size="8" font-family="Inter,sans-serif">CNN · 83.89%</text>
-  <text x="118" y="50" text-anchor="middle" fill="{v['t3']}" font-size="8.5" font-family="Inter,sans-serif">Image Branch</text>
-  <rect x="80" y="200" width="76" height="46" rx="8" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="1.5"/>
-  <text x="118" y="221" text-anchor="middle" fill="{v['ac']}" font-size="9.5" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 4</text>
-  <text x="118" y="235" text-anchor="middle" fill="{v['t2']}" font-size="8" font-family="Inter,sans-serif">CNN · 88.26%</text>
-  <rect x="644" y="60" width="76" height="46" rx="8" fill="{v['sf2']}" stroke="{v['ok']}" stroke-width="1.5"/>
-  <text x="682" y="81" text-anchor="middle" fill="{v['ok']}" font-size="9.5" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 1</text>
-  <text x="682" y="95" text-anchor="middle" fill="{v['t2']}" font-size="8" font-family="Inter,sans-serif">MLP · 93.41%</text>
-  <text x="682" y="50" text-anchor="middle" fill="{v['t3']}" font-size="8.5" font-family="Inter,sans-serif">EMBER Branch</text>
-  <rect x="644" y="200" width="76" height="46" rx="8" fill="{v['sf2']}" stroke="{v['ok']}" stroke-width="1.5"/>
-  <text x="682" y="221" text-anchor="middle" fill="{v['ok']}" font-size="9.5" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 2</text>
-  <text x="682" y="235" text-anchor="middle" fill="{v['t2']}" font-size="8" font-family="Inter,sans-serif">MLP · 85.90%</text>
-  <rect x="330" y="207" width="140" height="22" rx="4" fill="rgba(16,185,129,0.12)" stroke="{v['ok']}" stroke-width="1"/>
-  <text x="400" y="222" text-anchor="middle" fill="{v['ok']}" font-size="8.5" font-weight="600" font-family="Space Grotesk,sans-serif">Global: 92.32% — 94.71%</text>
-  <circle cx="240" cy="280" r="4" fill="{v['ac']}"/><text x="250" y="284" fill="{v['t3']}" font-size="8.5" font-family="Inter,sans-serif">Model weights only</text>
-  <circle cx="380" cy="280" r="4" fill="{v['ok']}"/><text x="390" y="284" fill="{v['t3']}" font-size="8.5" font-family="Inter,sans-serif">Aggregated global model</text>
-  <text x="540" y="284" fill="{v['er']}" font-size="8.5" font-weight="600" font-family="Inter,sans-serif">No raw data ever shared</text>
+  <circle cx="400" cy="150" r="60" fill="url(#gc)"/>
+  <line x1="118" y1="83" x2="355" y2="135" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <line x1="118" y1="222" x2="355" y2="165" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <line x1="682" y1="83" x2="445" y2="135" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <line x1="682" y1="222" x2="445" y2="165" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.5s" repeatCount="indefinite" path="M118,83 Q260,95 355,135"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite"/></circle>
+  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.8s" begin="1.2s" repeatCount="indefinite" path="M118,222 Q240,210 355,165"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.2s" repeatCount="indefinite"/></circle>
+  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.5s" begin=".6s" repeatCount="indefinite" path="M682,83 Q540,95 445,135"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" begin=".6s" repeatCount="indefinite"/></circle>
+  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite" path="M682,222 Q560,210 445,165"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="400" cy="150" r="50" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="2"/>
+  <text x="400" y="144" text-anchor="middle" fill="{v['ac']}" font-size="14" font-weight="700" font-family="Space Grotesk,sans-serif">FEDERATED</text>
+  <text x="400" y="161" text-anchor="middle" fill="{v['ac']}" font-size="14" font-weight="700" font-family="Space Grotesk,sans-serif">SERVER</text>
+  <text x="400" y="177" text-anchor="middle" fill="{v['t3']}" font-size="11" font-family="Inter,sans-serif">FedAvg · FedMD</text>
+  <rect x="74" y="56" width="88" height="52" rx="8" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="1.5"/>
+  <text x="118" y="79" text-anchor="middle" fill="{v['ac']}" font-size="13" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 3</text>
+  <text x="118" y="97" text-anchor="middle" fill="{v['t2']}" font-size="11" font-family="Inter,sans-serif">CNN · 83.89%</text>
+  <text x="118" y="46" text-anchor="middle" fill="{v['t3']}" font-size="11" font-family="Inter,sans-serif">Image Branch</text>
+  <rect x="74" y="196" width="88" height="52" rx="8" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="1.5"/>
+  <text x="118" y="219" text-anchor="middle" fill="{v['ac']}" font-size="13" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 4</text>
+  <text x="118" y="237" text-anchor="middle" fill="{v['t2']}" font-size="11" font-family="Inter,sans-serif">CNN · 88.26%</text>
+  <rect x="638" y="56" width="88" height="52" rx="8" fill="{v['sf2']}" stroke="{v['ok']}" stroke-width="1.5"/>
+  <text x="682" y="79" text-anchor="middle" fill="{v['ok']}" font-size="13" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 1</text>
+  <text x="682" y="97" text-anchor="middle" fill="{v['t2']}" font-size="11" font-family="Inter,sans-serif">MLP · 93.41%</text>
+  <text x="682" y="46" text-anchor="middle" fill="{v['t3']}" font-size="11" font-family="Inter,sans-serif">EMBER Branch</text>
+  <rect x="638" y="196" width="88" height="52" rx="8" fill="{v['sf2']}" stroke="{v['ok']}" stroke-width="1.5"/>
+  <text x="682" y="219" text-anchor="middle" fill="{v['ok']}" font-size="13" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 2</text>
+  <text x="682" y="237" text-anchor="middle" fill="{v['t2']}" font-size="11" font-family="Inter,sans-serif">MLP · 85.90%</text>
+  <rect x="326" y="205" width="148" height="24" rx="4" fill="rgba(16,185,129,0.12)" stroke="{v['ok']}" stroke-width="1"/>
+  <text x="400" y="221" text-anchor="middle" fill="{v['ok']}" font-size="11" font-weight="600" font-family="Space Grotesk,sans-serif">Global: 92.32% — 94.71%</text>
+  <circle cx="240" cy="280" r="4" fill="{v['ac']}"/><text x="250" y="284" fill="{v['t3']}" font-size="11" font-family="Inter,sans-serif">Model weights only</text>
+  <circle cx="390" cy="280" r="4" fill="{v['ok']}"/><text x="400" y="284" fill="{v['t3']}" font-size="11" font-family="Inter,sans-serif">Aggregated global model</text>
+  <text x="570" y="284" fill="{v['er']}" font-size="11" font-weight="600" font-family="Inter,sans-serif">No raw data ever shared</text>
 </svg>
 </div>
 """, unsafe_allow_html=True)
@@ -612,39 +743,33 @@ if pg=='hero':
     fig_kc=go.Figure()
     for i,(num,title,sub,col,bg_col) in enumerate(kc):
         r_,g_,b__=(int(col[1:3],16),int(col[3:5],16),int(col[5:7],16))
-        # Rectangle body
         fig_kc.add_shape(type='rect',
-            x0=i-.38,x1=i+.38,y0=.25,y1=.75,
+            x0=i-.40,x1=i+.40,y0=.18,y1=.78,
             fillcolor=bg_col,
             line=dict(color=col,width=1.8))
-        # Step number
-        fig_kc.add_annotation(x=i,y=.82,text=f'<span style="color:{v["t3"]}">{num}</span>',
-            showarrow=False,font=dict(size=8.5,color=v['t3'],family='JetBrains Mono'))
-        # Title inside box
+        fig_kc.add_annotation(x=i,y=.86,text=f'<span style="color:{v["t3"]}">{num}</span>',
+            showarrow=False,font=dict(size=12,color=v['t3'],family='JetBrains Mono'))
         fig_kc.add_annotation(x=i,y=.54,text=f'<b>{title}</b>',
-            showarrow=False,font=dict(size=8.5,color=col,family='Space Grotesk,sans-serif'),align='center')
-        # Sub below title
+            showarrow=False,font=dict(size=12,color=col,family='Space Grotesk,sans-serif'),align='center')
         if sub:
-            fig_kc.add_annotation(x=i,y=.36,text=f'<span style="font-family:JetBrains Mono">{sub}</span>',
-                showarrow=False,font=dict(size=8,color=col,family='JetBrains Mono,monospace'))
-        # Arrow between boxes
+            fig_kc.add_annotation(x=i,y=.32,text=f'<span style="font-family:JetBrains Mono">{sub}</span>',
+                showarrow=False,font=dict(size=11,color=col,family='JetBrains Mono,monospace'))
         if i<n-1:
             nc=kc[i+1][3]; nr_,ng_,nb__=(int(nc[1:3],16),int(nc[3:5],16),int(nc[5:7],16))
             fig_kc.add_annotation(x=i+.5,y=.5,text='',showarrow=True,
                 arrowhead=2,arrowsize=1,arrowwidth=1.5,
                 arrowcolor=f'rgba({nr_},{ng_},{nb__},0.5)',
                 ax=-(35),ay=0,axref='pixel',ayref='pixel')
-    # Blocked badge above last node
-    fig_kc.add_annotation(x=n-1,y=.95,
+    fig_kc.add_annotation(x=n-1,y=.97,
         text='<b>THREAT NEUTRALISED</b>',showarrow=False,
-        font=dict(size=9,color=v['ok'],family='Space Grotesk,sans-serif'),
+        font=dict(size=12,color=v['ok'],family='Space Grotesk,sans-serif'),
         bgcolor='rgba(16,185,129,0.1)',bordercolor='rgba(16,185,129,0.35)',
-        borderwidth=1,borderpad=4)
+        borderwidth=1,borderpad=5)
     fig_kc.update_layout(
         xaxis=dict(visible=False,range=[-.6,n-.4]),
-        yaxis=dict(visible=False,range=[.15,1.08]),
+        yaxis=dict(visible=False,range=[.10,1.10]),
         plot_bgcolor='rgba(0,0,0,0)',paper_bgcolor=v['sf'],
-        height=185,margin=dict(t=8,b=8,l=8,r=8),
+        height=210,margin=dict(t=10,b=10,l=8,r=8),
         font=dict(family='Inter,sans-serif'))
     st.plotly_chart(fig_kc,use_container_width=True)
     desc("Step-by-step ransomware detection pipeline: a PE file is received, features are extracted, the EMBER federated model performs binary malware detection, and if confirmed malicious, the image CNN classifies the malware family — blocking the threat with combined federated intelligence.")
