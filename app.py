@@ -29,109 +29,131 @@ ASSETS = os.path.join(BASE, 'assets')
 if 'page'       not in st.session_state: st.session_state.page       = 'hero'
 if 'logged_in'  not in st.session_state: st.session_state.logged_in  = False
 if 'user_email' not in st.session_state: st.session_state.user_email = ''
+if 'is_guest'   not in st.session_state: st.session_state.is_guest   = False
 
-# ── Email validation ──────────────────────────────────
-def is_valid_email(email):
-    pattern = r'^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$'
-    return bool(re.match(pattern, email.strip()))
+# ── Whitelist ─────────────────────────────────────────
+ALLOWED = {
+    'narmeen@gmail.com',
+    'ahmed@gmail.com',
+    'asad@gmail.com',
+    'ghous@gmail.com',
+}
 
 # ══════════════════════════════════════════════════════
 # LOGIN PAGE
 # ══════════════════════════════════════════════════════
 if not st.session_state.logged_in:
     st.markdown("""
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 html,body,[class*="css"]{background:#04060D!important;color:#E2E8F0!important;font-family:'Inter',sans-serif!important;}
 .stApp{
   background:#04060D!important;
   background-image:
-    radial-gradient(circle at 20% 20%,rgba(59,130,246,0.06),transparent 40%),
+    radial-gradient(circle at 20% 20%,rgba(59,130,246,0.07),transparent 40%),
     radial-gradient(circle at 80% 80%,rgba(6,182,212,0.05),transparent 40%),
-    radial-gradient(rgba(59,130,246,0.035) 1px,transparent 1px)!important;
+    radial-gradient(rgba(59,130,246,0.03) 1px,transparent 1px)!important;
   background-size:auto,auto,26px 26px!important;
 }
-.block-container{max-width:440px!important;margin:0 auto!important;padding-top:7vh!important;padding-bottom:4vh!important;}
+.block-container{max-width:420px!important;margin:0 auto!important;
+  padding-top:8vh!important;padding-bottom:0!important;}
 .stTextInput>div>div{
-  background:#0A101E!important;border:1px solid rgba(59,130,246,0.2)!important;
-  border-radius:10px!important;transition:all 0.2s ease!important;
+  background:#080E1C!important;border:1px solid rgba(59,130,246,0.2)!important;
+  border-radius:9px!important;transition:border-color 0.2s ease!important;
 }
 .stTextInput>div>div:focus-within{
-  border-color:rgba(59,130,246,0.6)!important;
-  box-shadow:0 0 0 3px rgba(59,130,246,0.12)!important;
+  border-color:rgba(59,130,246,0.55)!important;
+  box-shadow:0 0 0 3px rgba(59,130,246,0.09)!important;
 }
-.stTextInput>div>div>input{color:#E2E8F0!important;font-family:'Inter',sans-serif!important;font-size:14px!important;padding:12px 14px!important;}
-.stTextInput>div>div>input::placeholder{color:#3A4658!important;}
-.stTextInput label{color:#94A3B8!important;font-size:12px!important;font-weight:600!important;text-transform:uppercase!important;letter-spacing:.06em!important;font-family:'Space Grotesk',sans-serif!important;}
-.stButton>button{
-  background:linear-gradient(135deg,#1D4ED8,#3B82F6)!important;color:#fff!important;
-  border:none!important;border-radius:10px!important;font-family:'Space Grotesk',sans-serif!important;
-  font-weight:600!important;font-size:15px!important;padding:13px!important;width:100%!important;
-  box-shadow:0 4px 18px rgba(59,130,246,0.32)!important;transition:all 0.22s ease!important;
-  letter-spacing:.01em!important;margin-top:4px!important;
-}
-.stButton>button:hover{transform:translateY(-2px)!important;box-shadow:0 10px 28px rgba(59,130,246,0.45)!important;}
-.stButton>button:active{transform:translateY(0)!important;}
-.stAlert{border-radius:10px!important;font-family:'Inter',sans-serif!important;}
+.stTextInput>div>div>input{
+  color:#E2E8F0!important;font-family:'Inter',sans-serif!important;
+  font-size:15px!important;padding:12px 14px!important;}
+.stTextInput>div>div>input::placeholder{color:#2D3748!important;}
+.stTextInput label{color:#64748B!important;font-size:12px!important;font-weight:700!important;
+  text-transform:uppercase!important;letter-spacing:.07em!important;
+  font-family:'Space Grotesk',sans-serif!important;}
+div[data-testid="stButton"] button{
+  background:linear-gradient(135deg,#1D4ED8,#3B82F6)!important;
+  color:#fff!important;border:none!important;border-radius:9px!important;
+  font-family:'Space Grotesk',sans-serif!important;font-weight:600!important;
+  font-size:15px!important;padding:12px!important;width:100%!important;
+  box-shadow:0 4px 16px rgba(59,130,246,0.28)!important;
+  transition:all 0.2s ease!important;letter-spacing:.01em!important;}
+div[data-testid="stButton"] button:hover{
+  transform:translateY(-2px)!important;
+  box-shadow:0 8px 22px rgba(59,130,246,0.4)!important;}
+.stAlert{border-radius:9px!important;font-family:'Inter',sans-serif!important;font-size:14px!important;}
 footer,#MainMenu,header{display:none!important;}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes pulseGlow{0%,100%{box-shadow:0 0 32px rgba(59,130,246,0.22)}50%{box-shadow:0 0 44px rgba(59,130,246,0.4)}}
-.login-head{animation:fadeUp 0.5s ease both;}
-.login-card{animation:fadeUp 0.5s 0.08s ease both;}
-.login-foot{animation:fadeUp 0.5s 0.16s ease both;}
-.login-logo{animation:pulseGlow 3s ease infinite;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow{0%,100%{box-shadow:0 0 24px rgba(59,130,246,0.18)}50%{box-shadow:0 0 38px rgba(59,130,246,0.34)}}
+.la{animation:fadeUp .4s ease both}
+.lb{animation:fadeUp .4s .08s ease both}
+.lc{animation:fadeUp .4s .15s ease both}
+.logo{animation:glow 3s ease infinite}
 </style>""", unsafe_allow_html=True)
 
+    # Logo + title
     st.markdown("""
-<div class="login-head" style="text-align:center;margin-bottom:24px">
-  <div class="login-logo" style="width:60px;height:60px;border-radius:15px;margin:0 auto 18px;
-       background:linear-gradient(135deg,#1E3A8A,#3B82F6);
-       border:1px solid rgba(59,130,246,0.4);
+<div class="la" style="text-align:center;margin-bottom:22px">
+  <div class="logo" style="width:58px;height:58px;border-radius:14px;margin:0 auto 16px;
+       background:linear-gradient(135deg,#1E3A8A,#2563EB);
+       border:1px solid rgba(59,130,246,0.35);
        display:flex;align-items:center;justify-content:center">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
          stroke="#BFDBFE" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
     </svg>
   </div>
   <h1 style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:700;
-             color:#F1F5F9;letter-spacing:-0.025em;margin:0 0 8px">FedRansom</h1>
-  <p style="font-size:12px;color:#475569;margin:0 auto;font-weight:500;letter-spacing:.05em;
-            text-transform:uppercase;max-width:320px;line-height:1.6">
-    Federated Learning Based Privacy-Preserving Malware Detection
+             color:#F1F5F9;letter-spacing:-0.02em;margin:0 0 7px">FedRansom</h1>
+  <p style="font-size:12.5px;color:#334155;margin:0 auto;font-weight:600;letter-spacing:.05em;
+            text-transform:uppercase;max-width:300px;line-height:1.6">
+    Federated Learning Based Malware Detection
   </p>
-</div>
-<div class="login-card" style="background:rgba(10,16,30,0.7);border:1px solid rgba(59,130,246,0.14);
-            border-radius:16px;padding:30px 30px 26px;backdrop-filter:blur(14px);
-            box-shadow:0 20px 60px rgba(0,0,0,0.5)">
-  <div style="text-align:center;margin-bottom:22px">
-    <div style="font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:600;color:#E2E8F0;margin-bottom:5px">Welcome</div>
-    <div style="font-size:13px;color:#64748B;line-height:1.5">Enter your email to access the detection dashboard</div>
-  </div>
-""", unsafe_allow_html=True)
+</div>""", unsafe_allow_html=True)
 
-    email_val = st.text_input("Email Address", placeholder="you@gmail.com", label_visibility="visible")
+    # Sign-in card
+    st.markdown("""
+<div class="lb" style="background:rgba(8,14,28,0.82);border:1px solid rgba(59,130,246,0.13);
+     border-radius:16px;padding:26px 28px 22px;backdrop-filter:blur(16px);
+     box-shadow:0 20px 50px rgba(0,0,0,0.55)">
+  <div style="margin-bottom:18px">
+    <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600;
+                color:#E2E8F0;margin-bottom:5px">Welcome back</div>
+    <div style="font-size:13.5px;color:#475569;line-height:1.5">
+      Enter your registered email to access the dashboard
+    </div>
+  </div>""", unsafe_allow_html=True)
 
-    if st.button("Access Dashboard", type="primary"):
-        if email_val.strip() == '':
+    email_val = st.text_input("Email Address", placeholder="yourname@gmail.com",
+                               label_visibility="visible", key="login_email")
+
+    if st.button("Sign In", type="primary", use_container_width=True):
+        entered = email_val.strip().lower()
+        if entered == '':
             st.error("Please enter your email address.")
-        elif not is_valid_email(email_val):
-            st.error("Please enter a valid email address (e.g. user@gmail.com)")
+        elif entered not in ALLOWED:
+            st.error("Access denied. This email is not authorized.")
         else:
             st.session_state.logged_in  = True
-            st.session_state.user_email = email_val.strip().lower()
+            st.session_state.user_email = entered
+            st.session_state.is_guest   = False
             st.rerun()
 
     st.markdown("""
-  <div style="display:flex;align-items:center;gap:8px;margin-top:18px;
-              padding-top:16px;border-top:1px solid rgba(59,130,246,0.08)">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
-    <span style="font-size:11px;color:#475569;line-height:1.4">No password required. No raw data is ever stored.</span>
+  <div style="display:flex;align-items:center;gap:8px;margin-top:16px;
+              padding-top:14px;border-top:1px solid rgba(255,255,255,0.05)">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981"
+         stroke-width="2.5"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+    <span style="font-size:12px;color:#334155">No raw data stored. GDPR compliant.</span>
   </div>
-</div>
-<div class="login-foot" style="text-align:center;margin-top:22px">
-  <p style="font-size:11px;color:#1E293B;line-height:1.8;margin:0">
-    Final Year Project &nbsp;·&nbsp; [University Name] &nbsp;·&nbsp; 2025<br>
-    GDPR &amp; HIPAA Compliant &nbsp;·&nbsp; Privacy by Design
+</div>""", unsafe_allow_html=True)
+
+    # Footer
+    st.markdown("""
+<div class="lc" style="text-align:center;margin-top:18px">
+  <p style="font-size:11.5px;color:#0F172A;line-height:1.9;margin:0">
+    Iqra University, Karachi &nbsp;·&nbsp; FYP 2025
   </p>
 </div>""", unsafe_allow_html=True)
 
@@ -577,7 +599,7 @@ with st.sidebar:
 </div>
 <div style="height:1px;background:linear-gradient(90deg,rgba(59,130,246,0.25),transparent);margin-bottom:10px"></div>""", unsafe_allow_html=True)
 
-    # Welcome user
+    # Sidebar user info
     email_display = st.session_state.user_email
     short_email = email_display if len(email_display) <= 26 else email_display[:23] + '...'
     st.markdown(f"""
@@ -651,6 +673,7 @@ section[data-testid="stSidebar"] div[data-testid="stButton"]:nth-child({active_i
     if st.button("Logout", use_container_width=True, key="logout_btn"):
         st.session_state.logged_in  = False
         st.session_state.user_email = ''
+        st.session_state.is_guest   = False
         st.session_state.page       = 'hero'
         st.rerun()
 
@@ -693,18 +716,18 @@ if pg=='hero':
     <radialGradient id="go" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="{v['ok']}" stop-opacity="0.2"/><stop offset="100%" stop-color="{v['ok']}" stop-opacity="0"/></radialGradient>
   </defs>
   <circle cx="400" cy="150" r="60" fill="url(#gc)"/>
-  <line x1="118" y1="83" x2="355" y2="135" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <line x1="118" y1="222" x2="355" y2="165" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <line x1="682" y1="83" x2="445" y2="135" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <line x1="682" y1="222" x2="445" y2="165" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
-  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.5s" repeatCount="indefinite" path="M118,83 Q260,95 355,135"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite"/></circle>
-  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.8s" begin="1.2s" repeatCount="indefinite" path="M118,222 Q240,210 355,165"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.2s" repeatCount="indefinite"/></circle>
-  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.5s" begin=".6s" repeatCount="indefinite" path="M682,83 Q540,95 445,135"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" begin=".6s" repeatCount="indefinite"/></circle>
-  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite" path="M682,222 Q560,210 445,165"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.8s" repeatCount="indefinite"/></circle>
-  <circle cx="400" cy="150" r="50" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="2"/>
-  <text x="400" y="144" text-anchor="middle" fill="{v['ac']}" font-size="14" font-weight="700" font-family="Space Grotesk,sans-serif">FEDERATED</text>
-  <text x="400" y="161" text-anchor="middle" fill="{v['ac']}" font-size="14" font-weight="700" font-family="Space Grotesk,sans-serif">SERVER</text>
-  <text x="400" y="177" text-anchor="middle" fill="{v['t3']}" font-size="11" font-family="Inter,sans-serif">FedAvg · FedMD</text>
+  <line x1="118" y1="83" x2="350" y2="133" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <line x1="118" y1="222" x2="350" y2="167" stroke="{v['ac']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <line x1="682" y1="83" x2="450" y2="133" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <line x1="682" y1="222" x2="450" y2="167" stroke="{v['ok']}" stroke-width="1.2" stroke-dasharray="6,3" opacity="0.5"/>
+  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.5s" repeatCount="indefinite" path="M118,83 Q260,95 350,133"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" repeatCount="indefinite"/></circle>
+  <circle r="5" fill="{v['ac']}"><animateMotion dur="2.8s" begin="1.2s" repeatCount="indefinite" path="M118,222 Q240,210 350,167"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.2s" repeatCount="indefinite"/></circle>
+  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.5s" begin=".6s" repeatCount="indefinite" path="M682,83 Q540,95 450,133"/><animate attributeName="opacity" values="0;1;1;0" dur="2.5s" begin=".6s" repeatCount="indefinite"/></circle>
+  <circle r="5" fill="{v['ok']}"><animateMotion dur="2.8s" begin="1.8s" repeatCount="indefinite" path="M682,222 Q560,210 450,167"/><animate attributeName="opacity" values="0;1;1;0" dur="2.8s" begin="1.8s" repeatCount="indefinite"/></circle>
+  <circle cx="400" cy="150" r="52" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="2"/>
+  <text x="400" y="141" text-anchor="middle" fill="{v['ac']}" font-size="12" font-weight="700" font-family="Space Grotesk,sans-serif">FEDERATED</text>
+  <text x="400" y="156" text-anchor="middle" fill="{v['ac']}" font-size="12" font-weight="700" font-family="Space Grotesk,sans-serif">SERVER</text>
+  <text x="400" y="170" text-anchor="middle" fill="{v['t3']}" font-size="10" font-family="Inter,sans-serif">FedAvg · FedMD</text>
   <rect x="74" y="56" width="88" height="52" rx="8" fill="{v['sf2']}" stroke="{v['ac']}" stroke-width="1.5"/>
   <text x="118" y="79" text-anchor="middle" fill="{v['ac']}" font-size="13" font-weight="700" font-family="Space Grotesk,sans-serif">CLIENT 3</text>
   <text x="118" y="97" text-anchor="middle" fill="{v['t2']}" font-size="11" font-family="Inter,sans-serif">CNN · 83.89%</text>
